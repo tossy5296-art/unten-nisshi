@@ -81,6 +81,7 @@ textarea.code{height:64px;font-size:11px;color:var(--sub)}
 <div class="lbl">日常点検<small>点検した結果を選ぶ。全部問題がなければ下のボタンでまとめて選べます</small>
 <button class="btn wide" type="button" id="allOk">点検した結果、全部「問題なし」</button>
 <div class="insp" id="insp"></div></div>
+<label for="insPerson">点検実施者<select id="insPerson"><option value="">運転者と同じ</option></select></label>
 </section>
 
 <section>
@@ -152,7 +153,7 @@ var num=function(s){return String(s||'').replace(/[０-９]/g,function(c){return
 var norm=function(s){return String(s||'').replace(/[\s　]/g,'');};
 
 /* 選択肢を作る */
-['drv','chk1','chk2'].forEach(function(id){STAFF.forEach(function(p,i){var o=document.createElement('option');o.value=i;o.textContent=p.name.replace(/[\s　]+/,' ')+'（'+p.kana+'）';$(id).appendChild(o);});});
+['drv','chk1','chk2','insPerson'].forEach(function(id){STAFF.forEach(function(p,i){var o=document.createElement('option');o.value=i;o.textContent=p.name.replace(/[\s　]+/,' ')+'（'+p.kana+'）';$(id).appendChild(o);});});
 ['alc1','alc2'].forEach(function(id){$(id).innerHTML=ALC.map(function(v){return '<label><input type="checkbox" name="'+id+'" value="'+esc(v)+'">'+esc(v)+'</label>';}).join('');});
 $('insp').innerHTML=INSP.map(function(it,n){return '<div class="item" data-code="'+esc(it[0])+'"><div class="name">'+esc(it[1])+'</div><div class="chips">'+
   it[2].map(function(v){return '<label><input type="radio" name="i'+n+'" value="'+esc(v)+'">'+esc(v)+'</label>';}).join('')+'</div></div>';}).join('');
@@ -206,7 +207,7 @@ $('carFind').addEventListener('click',function(){$('odoBefore').value='';pickCar
 $('carOther').addEventListener('keydown',function(e){if(e.key==='Enter'){e.preventDefault();$('odoBefore').value='';pickCar();}});
 
 function state(){
-  var s={};['dep','arr','purpose','dest','weather','odoBefore','odoAfter','fuelAmount','note'].concat(KEEP).forEach(function(k){s[k]=$(k).value.trim();});
+  var s={};['dep','arr','purpose','dest','weather','odoBefore','odoAfter','fuelAmount','note','insPerson'].concat(KEEP).forEach(function(k){s[k]=$(k).value.trim();});
   s.alc1=[].map.call(document.querySelectorAll('input[name=alc1]:checked'),function(i){return i.value;});
   s.alc2=[].map.call(document.querySelectorAll('input[name=alc2]:checked'),function(i){return i.value;});
   s.fuel=(document.querySelector('input[name=fuel]:checked')||{}).value==='有';
@@ -232,6 +233,7 @@ function formUrl(s){
   if(CAR){add('car_number',CAR.num);add('car_name',CAR.name);}
   add('odometer_before',num(s.odoBefore));add('odometer_after',num(s.odoAfter));
   if(d){add('driver_name',d.name);add('department',DEPT);}
+  var ip=s.insPerson===''?d:pick(s.insPerson);if(ip)add('single_line_text_2',ip.name);
   if(c1)add('alcohol_checker',c1.name);if(c2)add('single_line_text_1',c2.name);
   add('driving_section',s.start);add('driving_section_0',s.dest);add('single_line_text',s.purpose);add('文字列__1行_',s.weather);add('purpose_free',s.note.replace(/\s*\n\s*/g,' '));
   if(s.dep){add('departureTime',utc(s.dep));add('alcoholCheckBefore',utc(shift(s.dep,-BEFORE)));}
