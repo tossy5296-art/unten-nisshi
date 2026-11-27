@@ -1,55 +1,66 @@
 <!doctype html><html lang="ja"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="robots" content="noindex,nofollow"><style>:root{padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}body{margin:0}[hidden]{display:none!important}</style></head><body><title>運転日誌 かんたん入力</title>
 <meta name="claude:viewport-fit-sides" content="cover">
 <style>
-/* 1カラムのスマホ用入力フォーム。いつもの設定 → 出発 → 帰庁 → 反映 の順に縦に流す */
-:root{--bg:#f3f5f4;--card:#ffffff;--fg:#1d2422;--sub:#5b6663;--line:#cfd8d5;--accent:#1f7a5c;--accent-bg:#e3f2ec;--warn-bg:#fff3e0;--warn-line:#e0a24a;--bad:#b3261e;
---font:"Hiragino Sans","Yu Gothic UI","Meiryo",system-ui,sans-serif}
-@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){--bg:#141a18;--card:#1d2522;--fg:#e8eeec;--sub:#a3b0ac;--line:#34413d;--accent:#5cc49d;--accent-bg:#1e3a30;--warn-bg:#3a2c14;--warn-line:#b9822f;--bad:#f2b8b5;color-scheme:dark}}
-:root[data-theme="dark"]{--bg:#141a18;--card:#1d2522;--fg:#e8eeec;--sub:#a3b0ac;--line:#34413d;--accent:#5cc49d;--accent-bg:#1e3a30;--warn-bg:#3a2c14;--warn-line:#b9822f;--bad:#f2b8b5;color-scheme:dark}
-body{background:var(--bg);color:var(--fg);font-family:var(--font);font-size:16px;line-height:1.6;
-padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:20px 48px}
-main{max-width:560px;margin:0 auto;display:flex;flex-direction:column;gap:16px}
-h1{font-size:22px;margin:0;text-wrap:balance}
-.lead{color:var(--sub);margin:0;font-size:14px}
-section,details{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:16px;display:flex;flex-direction:column;gap:12px}
+/* 黒と黄色を基調にした1カラムのスマホ用フォーム（契約ナビと同じ配色）。見出し帯 → 設定 → 車両 → 出発 → 帰庁 → 反映 */
+:root{--y:#FFE100;--y-soft:#FFF8CC;--k:#222222;--g:#5E5E5E;--line:#D6D6D6;--bg:#F4F4F2;--card:#FFFFFF;--bad:#C62828;--ok:#1B1B1B;
+--font:"Hiragino Sans","Hiragino Kaku Gothic ProN","Yu Gothic UI","Meiryo",system-ui,sans-serif;color-scheme:light}
+body{background:var(--bg);color:var(--k);font-family:var(--font);font-size:16px;line-height:1.6;margin:0;
+padding-left:max(14px,env(safe-area-inset-left,0px));padding-right:max(14px,env(safe-area-inset-right,0px));padding-block:0 48px}
+main{max-width:560px;margin:0 auto;display:flex;flex-direction:column;gap:14px}
+.hero{background:var(--y);margin:0 calc(-1*max(14px,env(safe-area-inset-left,0px))) 4px;padding:22px max(18px,env(safe-area-inset-left,0px)) 20px;display:flex;flex-direction:column;gap:8px}
+.hero .tag{align-self:flex-start;background:var(--k);color:var(--y);font-weight:bold;font-size:13px;padding:3px 10px;border-radius:4px}
+h1{font-size:28px;margin:0;line-height:1.25;text-wrap:balance;letter-spacing:.02em}
+.lead{margin:0;font-size:14px;font-weight:bold}
+section,details{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:16px;display:flex;flex-direction:column;gap:14px;box-shadow:0 1px 0 rgba(0,0,0,.04)}
 details{display:block}
-details[open]>summary{margin-bottom:12px}
-details>div{display:flex;flex-direction:column;gap:12px}
-summary{font-size:17px;font-weight:bold;color:var(--accent);cursor:pointer}
-h2{font-size:17px;margin:0;color:var(--accent)}
-label,.lbl{font-weight:bold;font-size:15px;display:flex;flex-direction:column;gap:4px}
-small,.note{font-weight:normal;color:var(--sub);font-size:13px}
+details[open]>summary{margin-bottom:14px}
+details>div{display:flex;flex-direction:column;gap:14px}
+summary{font-size:17px;font-weight:bold;cursor:pointer;list-style:none;display:flex;align-items:center;gap:8px}
+summary::-webkit-details-marker{display:none}
+summary::before{content:"";width:6px;height:22px;background:var(--y);border-radius:2px}
+summary::after{content:"＋";margin-left:auto;font-size:18px}
+details[open]>summary::after{content:"－"}
+h2{font-size:18px;margin:0;display:flex;align-items:center;gap:8px}
+h2::before{content:"";width:6px;height:22px;background:var(--y);border-radius:2px;flex:none}
+label,.lbl{font-weight:bold;font-size:15px;display:flex;flex-direction:column;gap:5px}
+small,.note{font-weight:normal;color:var(--g);font-size:13px}
 .note{margin:0}
-input,select,textarea{font-size:16px;padding:10px;border:1px solid var(--line);border-radius:6px;background:var(--bg);color:var(--fg);width:100%;box-sizing:border-box;font-family:inherit}
-input:focus-visible,select:focus-visible,button:focus-visible,a:focus-visible,summary:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
+input,select,textarea{font-size:17px;padding:11px 12px;border:2px solid var(--line);border-radius:8px;background:#fff;color:var(--k);width:100%;box-sizing:border-box;font-family:inherit;min-height:48px}
+input:focus,select:focus,textarea:focus{border-color:var(--k);outline:3px solid var(--y);outline-offset:0}
+button:focus-visible,a:focus-visible,summary:focus-visible{outline:3px solid var(--k);outline-offset:2px}
 .row{display:flex;gap:8px;align-items:stretch}
 .row>*{min-width:0}
-.btn{font-size:15px;font-weight:bold;padding:10px 12px;border:1px solid var(--accent);border-radius:8px;background:var(--accent-bg);color:var(--accent);cursor:pointer;white-space:nowrap;font-family:inherit}
+.btn{font-size:16px;font-weight:bold;padding:10px 16px;border:2px solid var(--k);border-radius:8px;background:var(--y);color:var(--k);cursor:pointer;white-space:nowrap;font-family:inherit;min-height:48px}
+.btn:active{transform:translateY(1px)}
+.btn:disabled{opacity:.5}
 .btn.wide{white-space:normal;text-align:center;line-height:1.4}
-.big{display:block;text-align:center;text-decoration:none;font-size:17px;font-weight:bold;padding:15px;border:0;border-radius:10px;background:var(--accent);color:var(--card);cursor:pointer;font-family:inherit;width:100%;box-sizing:border-box}
-.calc{font-size:14px;color:var(--accent);margin:-4px 0 0}
-.chips{display:flex;flex-wrap:wrap;gap:6px}
-.chips label{flex-direction:row;align-items:center;gap:6px;font-weight:normal;font-size:15px;border:1px solid var(--line);border-radius:8px;padding:8px 10px;background:var(--bg);cursor:pointer}
-.chips input{width:auto;margin:0}
-.chips label:has(input:checked){border-color:var(--accent);background:var(--accent-bg);color:var(--accent);font-weight:bold}
-.insp{display:flex;flex-direction:column;gap:10px}
-.insp .item{display:flex;flex-direction:column;gap:4px;padding-bottom:10px;border-bottom:1px solid var(--line)}
+.big{display:block;text-align:center;text-decoration:none;font-size:18px;font-weight:bold;padding:17px;border:0;border-radius:12px;background:var(--k);color:var(--y);cursor:pointer;font-family:inherit;width:100%;box-sizing:border-box}
+.big:active{transform:translateY(1px)}
+.calc{font-size:14px;font-weight:bold;margin:-6px 0 0;background:var(--y-soft);border-left:4px solid var(--y);padding:6px 10px;border-radius:4px}
+.calc:empty{display:none}
+.chips{display:flex;flex-wrap:wrap;gap:8px}
+.chips label{flex-direction:row;align-items:center;gap:6px;font-weight:normal;font-size:15px;border:2px solid var(--line);border-radius:999px;padding:9px 14px;background:#fff;cursor:pointer;min-height:44px;box-sizing:border-box}
+.chips input{width:auto;margin:0;min-height:0;accent-color:var(--k)}
+.chips label:has(input:checked){border-color:var(--k);background:var(--y);font-weight:bold}
+.insp{display:flex;flex-direction:column;gap:12px}
+.insp .item{display:flex;flex-direction:column;gap:6px;padding-bottom:12px;border-bottom:1px solid var(--line)}
 .insp .item:last-child{border-bottom:0;padding-bottom:0}
 .insp .name{font-size:14px}
 .insp .item.bad .name{color:var(--bad);font-weight:bold}
-.miss{background:var(--warn-bg);border:1px solid var(--warn-line);border-radius:8px;padding:10px 12px;font-size:14px}
+.insp .item.bad label:has(input:checked){background:#FFE3E0;border-color:var(--bad);color:var(--bad)}
+.miss{background:var(--y-soft);border:2px solid var(--y);border-radius:8px;padding:10px 12px;font-size:14px;font-weight:bold}
 .miss:empty{display:none}
-#copyMsg{font-size:14px;margin:0;min-height:1.6em}
-#copyMsg{color:var(--accent);font-weight:bold}
-ol{margin:0;padding-left:1.4em;display:flex;flex-direction:column;gap:6px}
-textarea.code{height:64px;font-size:11px;color:var(--sub)}
-.warn{background:var(--warn-bg);border-color:var(--warn-line)}
+ol{margin:0;padding-left:1.4em;display:flex;flex-direction:column;gap:6px;font-size:15px}
+.warn{background:var(--k);border-color:var(--k);color:#fff}
+.warn h2{color:var(--y)}
+.warn .note{color:#EDEDED}
+optgroup{font-weight:bold}
 [hidden]{display:none!important}
 @media (prefers-reduced-motion:reduce){*{transition:none!important}}
 </style>
 <main>
-<h1>運転日誌 かんたん入力</h1>
-<p class="lead">ここに入れて「運転日誌フォームに反映して開く」を押すと、本来の運転日誌フォームが、入れた内容の入った状態で開きます。あとは内容を確かめて送信するだけです。</p>
+<header class="hero"><span class="tag">運転日誌</span><h1>かんたん入力</h1>
+<p class="lead">ここに入れて「運転日誌フォームに反映して開く」を押すと、本来の運転日誌フォームが、入れた内容の入った状態で開きます。あとは内容を確かめて送信するだけです。</p></header>
 
 <details id="setBox">
 <summary>いつもの設定（運転者・確認者）</summary>
@@ -58,13 +69,13 @@ textarea.code{height:64px;font-size:11px;color:var(--sub)}
 <label for="chk1">酒気帯び確認者（運転前）<select id="chk1"><option value="">選んでください</option></select></label>
 <label for="chk2">酒気帯び確認者（運転後）<select id="chk2"><option value="">選んでください</option></select></label>
 <label for="start">運転区間（開始）<input id="start" value="市役所"></label>
-<p class="note">学校教育課の職員から選びます。この設定だけは、このスマホに残ります。</p>
+<p class="note">学校教育課・教育支援課の職員から選びます。所属課は、選んだ運転者の課が入ります。この設定だけは、このスマホに残ります。</p>
 </div>
 </details>
 
 <section>
 <h2>車両</h2>
-<label for="carSel">車両<select id="carSel"><option value="">選んでください</option><option value="7133">7133（学校教育課）</option><option value="7132">7132（こども政策課）</option><option value="other">その他車両（番号を入れる）</option></select></label>
+<label for="carSel">車両<select id="carSel"><option value="">選んでください</option><option value="7133">7133（学校教育課）</option><option value="7132">7132（こども政策課）</option><option value="7131">7131（教育支援課）</option><option value="6605">6605（教育支援課）</option><option value="other">その他車両（番号を入れる）</option></select></label>
 <label for="carOther" id="carOtherL" hidden>その他車両の車両番号<small>例：大阪480あ1234。下4桁だけでもよい</small><div class="row"><input id="carOther" inputmode="text"><button class="btn" type="button" id="carFind">さがす</button></div></label>
 <p class="calc" id="carInfo" aria-live="polite"></p>
 <label for="odoBefore">出庫前距離（km）<small>車両を選ぶと、前回の記録（入庫後距離）が入ります。メーターと合っているか確かめる</small><input id="odoBefore" inputmode="numeric"></label>
@@ -112,12 +123,11 @@ textarea.code{height:64px;font-size:11px;color:var(--sub)}
 </section>
 </main>
 <script>
-var STAFF = [{"name": "石田　亮太", "kana": "いしだ"}, {"name": "上中　陽介", "kana": "うえなか"}, {"name": "馬田　健太", "kana": "うまた"}, {"name": "大﨑　貴子", "kana": "おおさき"}, {"name": "澤田　真也", "kana": "さわだ"}, {"name": "島田　恵里", "kana": "しまだ"}, {"name": "鈴木　友二", "kana": "すずき"}, {"name": "田中　大介", "kana": "たなか"}, {"name": "筒井　豊", "kana": "つつい"}, {"name": "長曽　寛央", "kana": "ながそ"}, {"name": "橋本　知", "kana": "はしもと"}, {"name": "羽田　行伸", "kana": "はねだ"}, {"name": "樋口　三花", "kana": "ひぐち"}, {"name": "宮本　藍", "kana": "みやもと"}, {"name": "宗木　俊憲", "kana": "むねき"}];
+var STAFF = [{"name": "石田　亮太", "kana": "いしだ", "dept": "学校教育課"}, {"name": "上中　陽介", "kana": "うえなか", "dept": "学校教育課"}, {"name": "馬田　健太", "kana": "うまた", "dept": "学校教育課"}, {"name": "大﨑　貴子", "kana": "おおさき", "dept": "学校教育課"}, {"name": "澤田　真也", "kana": "さわだ", "dept": "学校教育課"}, {"name": "島田　恵里", "kana": "しまだ", "dept": "学校教育課"}, {"name": "鈴木　友二", "kana": "すずき", "dept": "学校教育課"}, {"name": "田中　大介", "kana": "たなか", "dept": "学校教育課"}, {"name": "筒井　豊", "kana": "つつい", "dept": "学校教育課"}, {"name": "長曽　寛央", "kana": "ながそ", "dept": "学校教育課"}, {"name": "橋本　知", "kana": "はしもと", "dept": "学校教育課"}, {"name": "羽田　行伸", "kana": "はねだ", "dept": "学校教育課"}, {"name": "樋口　三花", "kana": "ひぐち", "dept": "学校教育課"}, {"name": "宮本　藍", "kana": "みやもと", "dept": "学校教育課"}, {"name": "宗木　俊憲", "kana": "むねき", "dept": "学校教育課"}, {"name": "久米　真由美", "kana": "くめ", "dept": "教育支援課"}, {"name": "芝谷　圭太", "kana": "しばたに", "dept": "教育支援課"}, {"name": "竹盛　照正", "kana": "たけもり", "dept": "教育支援課"}, {"name": "安田　昂平", "kana": "やすだ", "dept": "教育支援課"}];
 var FORM = 'https://settsu-city.form.kintoneapp.com/public/0e09b7fc352f05f01d18e01e75eb1ea32db450a5c83bbb9faff2030bf91e61d6';
 var VIEW = 'https://settsu-city.viewer.kintoneapp.com/public/api/records/';
 var CARS = VIEW + 'a5da43d5b7314eae29584e49ffb1f6055d73db91ec71963361bca50d851422a8/';  /* 車両の一覧 */
 var LOGS = VIEW + 'fd6098ce5d4095060bc06890bd08c38d71e8554077a050f1ac52c84e35ab0525/';  /* これまでの運転日誌 */
-var DEPT = '学校教育課';
 var BEFORE = 10, AFTER = 10;
 var ALC = ['無（検知器使用）','無（目視確認）','無（その他－電話）','無（その他－電話以外）','有'];
 var INSP = [
@@ -153,15 +163,17 @@ var num=function(s){return String(s||'').replace(/[０-９]/g,function(c){return
 var norm=function(s){return String(s||'').replace(/[\s　]/g,'');};
 
 /* 選択肢を作る */
-['drv','chk1','chk2','insPerson'].forEach(function(id){STAFF.forEach(function(p,i){var o=document.createElement('option');o.value=i;o.textContent=p.name.replace(/[\s　]+/,' ')+'（'+p.kana+'）';$(id).appendChild(o);});});
+['drv','chk1','chk2','insPerson'].forEach(function(id){var g={};STAFF.forEach(function(p,i){if(!g[p.dept]){g[p.dept]=document.createElement('optgroup');g[p.dept].label=p.dept;$(id).appendChild(g[p.dept]);}var o=document.createElement('option');o.value=i;o.textContent=p.name.replace(/[\s　]+/,' ')+'（'+p.kana+'）';g[p.dept].appendChild(o);});});
 ['alc1','alc2'].forEach(function(id){$(id).innerHTML=ALC.map(function(v){return '<label><input type="checkbox" name="'+id+'" value="'+esc(v)+'">'+esc(v)+'</label>';}).join('');});
 $('insp').innerHTML=INSP.map(function(it,n){return '<div class="item" data-code="'+esc(it[0])+'"><div class="name">'+esc(it[1])+'</div><div class="chips">'+
   it[2].map(function(v){return '<label><input type="radio" name="i'+n+'" value="'+esc(v)+'">'+esc(v)+'</label>';}).join('')+'</div></div>';}).join('');
 
 /* いつもの設定だけ保存する（今回の内容は保存しない） */
 var KEEP=['drv','chk1','chk2','start'];
-function saveSet(){try{var s={};KEEP.forEach(function(k){s[k]=$(k).value;});localStorage.setItem('unten-set',JSON.stringify(s));}catch(e){}}
-var saved={};try{saved=JSON.parse(localStorage.getItem('unten-set')||'{}');KEEP.forEach(function(k){if(saved[k]!==undefined)$(k).value=saved[k];});}catch(e){}
+var nameOf=function(v){return v===''||!STAFF[+v]?'':STAFF[+v].name;};
+var idxOf=function(n){for(var i=0;i<STAFF.length;i++)if(n&&norm(STAFF[i].name)===norm(n))return String(i);return '';};
+function saveSet(){try{localStorage.setItem('unten-set',JSON.stringify({drv:nameOf($('drv').value),chk1:nameOf($('chk1').value),chk2:nameOf($('chk2').value),start:$('start').value,v:2}));}catch(e){}}
+var saved={};try{saved=JSON.parse(localStorage.getItem('unten-set')||'{}');if(saved.v===2){['drv','chk1','chk2'].forEach(function(k){saved[k]=idxOf(saved[k]);});}else{['drv','chk1','chk2'].forEach(function(k){if(saved[k]!==undefined&&STAFF[+saved[k]])saved[k]=String(saved[k]);});}KEEP.forEach(function(k){if(saved[k]!==undefined)$(k).value=saved[k];});}catch(e){}
 try{localStorage.removeItem('unten-form');}catch(e){}
 $('setBox').open=!(saved.drv&&saved.chk1&&saved.chk2);
 KEEP.forEach(function(k){$(k).addEventListener('change',saveSet);});
@@ -232,7 +244,7 @@ function formUrl(s){
   var d=pick(s.drv),c1=pick(s.chk1),c2=pick(s.chk2);
   if(CAR){add('car_number',CAR.num);add('car_name',CAR.name);}
   add('odometer_before',num(s.odoBefore));add('odometer_after',num(s.odoAfter));
-  if(d){add('driver_name',d.name);add('department',DEPT);}
+  if(d){add('driver_name',d.name);add('department',d.dept);}
   var ip=s.insPerson===''?d:pick(s.insPerson);if(ip)add('single_line_text_2',ip.name);
   if(c1)add('alcohol_checker',c1.name);if(c2)add('single_line_text_1',c2.name);
   add('driving_section',s.start);add('driving_section_0',s.dest);add('single_line_text',s.purpose);add('文字列__1行_',s.weather);add('purpose_free',s.note.replace(/\s*\n\s*/g,' '));
