@@ -48,6 +48,9 @@ button:focus-visible,a:focus-visible,summary:focus-visible{outline:3px solid var
 .insp .name{font-size:14px}
 .insp .item.bad .name{color:var(--bad);font-weight:bold}
 .insp .item.bad label:has(input:checked){background:#FFE3E0;border-color:var(--bad);color:var(--bad)}
+.ttl{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.auto{background:var(--k);color:var(--y);font-size:13px;font-weight:bold;padding:3px 10px;border-radius:999px;white-space:nowrap}
+.autoIn{background:var(--y-soft);border-color:var(--y);font-weight:bold}
 .miss{background:var(--y-soft);border:2px solid var(--y);border-radius:8px;padding:10px 12px;font-size:14px;font-weight:bold}
 .miss:empty{display:none}
 ol{margin:0;padding-left:1.4em;display:flex;flex-direction:column;gap:6px;font-size:15px}
@@ -78,7 +81,7 @@ optgroup{font-weight:bold}
 <label for="carSel">車両<select id="carSel"><option value="">選んでください</option><option value="7133">7133（学校教育課）</option><option value="7132">7132（こども政策課）</option><option value="7131">7131（教育支援課）</option><option value="6605">6605（教育支援課）</option><option value="other">その他車両（番号を入れる）</option></select></label>
 <label for="carOther" id="carOtherL" hidden>その他車両の車両番号<small>例：大阪480あ1234。下4桁だけでもよい</small><div class="row"><input id="carOther" inputmode="text"><button class="btn" type="button" id="carFind">さがす</button></div></label>
 <p class="calc" id="carInfo" aria-live="polite"></p>
-<label for="odoBefore">出庫前距離（km）<small>車両を選ぶと、前回の記録（入庫後距離）が入ります。メーターと合っているか確かめる</small><input id="odoBefore" inputmode="numeric"></label>
+<label for="odoBefore"><span class="ttl">出庫前距離（km）<span class="auto">自動で入ります</span></span><small>入力は不要です。車両を選ぶと、前回の記録（入庫後距離）が自動で入ります。メーターと違うときだけ直してください。</small><input id="odoBefore" class="autoIn" inputmode="numeric" placeholder="車両を選ぶと自動で入ります"></label>
 </section>
 
 <section>
