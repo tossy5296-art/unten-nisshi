@@ -49,20 +49,26 @@ textarea.code{height:64px;font-size:11px;color:var(--sub)}
 </style>
 <main>
 <h1>運転日誌 かんたん入力</h1>
-<p class="lead">ここで入れた内容を、本来の運転日誌フォームにまとめて反映します。入れた内容はこのスマホに残るので、出発のときに上半分、帰ってから下半分を入れても大丈夫です。</p>
+<p class="lead">ここに入れて「運転日誌フォームに反映して開く」を押すと、本来の運転日誌フォームが、入れた内容の入った状態で開きます。あとは内容を確かめて送信するだけです。</p>
 
 <details id="setBox">
-<summary>いつもの設定（車両・運転者・確認者）</summary>
+<summary>いつもの設定（運転者・確認者）</summary>
 <div>
-<label for="carSel">車両<select id="carSel"><option value="7133">7133（学校教育課）</option><option value="7132">7132（こども政策課）</option><option value="other">その他車両（番号を入れる）</option></select></label>
-<label for="carOther" id="carOtherL" hidden>その他車両の車両番号<small>例：大阪480あ1234。下4桁だけでもよい</small><input id="carOther" inputmode="text"></label>
 <label for="drv">運転者<select id="drv"><option value="">選んでください</option></select></label>
 <label for="chk1">酒気帯び確認者（運転前）<select id="chk1"><option value="">選んでください</option></select></label>
 <label for="chk2">酒気帯び確認者（運転後）<select id="chk2"><option value="">選んでください</option></select></label>
 <label for="start">運転区間（開始）<input id="start" value="市役所"></label>
-<p class="note">運転者・確認者は学校教育課の職員から選びます。所属課は運転者から自動で入ります。前回の入庫後距離は、反映するときに選んだ車両の記録から自動で入ります。</p>
+<p class="note">学校教育課の職員から選びます。この設定だけは、このスマホに残ります。</p>
 </div>
 </details>
+
+<section>
+<h2>車両</h2>
+<label for="carSel">車両<select id="carSel"><option value="">選んでください</option><option value="7133">7133（学校教育課）</option><option value="7132">7132（こども政策課）</option><option value="other">その他車両（番号を入れる）</option></select></label>
+<label for="carOther" id="carOtherL" hidden>その他車両の車両番号<small>例：大阪480あ1234。下4桁だけでもよい</small><div class="row"><input id="carOther" inputmode="text"><button class="btn" type="button" id="carFind">さがす</button></div></label>
+<p class="calc" id="carInfo" aria-live="polite"></p>
+<label for="odoBefore">出庫前距離（km）<small>車両を選ぶと、前回の記録（入庫後距離）が入ります。メーターと合っているか確かめる</small><input id="odoBefore" inputmode="numeric"></label>
+</section>
 
 <section>
 <h2>出発</h2>
@@ -81,47 +87,23 @@ textarea.code{height:64px;font-size:11px;color:var(--sub)}
 <h2>帰庁</h2>
 <label for="arr">入庫日時<div class="row"><input id="arr" type="datetime-local"><button class="btn" type="button" data-now="arr">今</button></div></label>
 <p class="calc" id="calc2"></p>
-<label for="odoAfter">入庫後距離（km）<small>メーターの合計距離（ODO）の数字</small>
-<input id="odoAfter" inputmode="numeric" placeholder="例：46102"></label>
+<label for="odoAfter">入庫後距離（km）<small>メーターの合計距離（ODO）の数字</small><input id="odoAfter" inputmode="numeric" placeholder="例：46102"></label>
+<p class="calc" id="calc3"></p>
 <div class="lbl">酒気帯びの有無と確認方法（運転後）<small>実際に確認した方法を選ぶ（いくつでも）</small><div class="chips" id="alc2"></div></div>
 <div class="lbl">給油<div class="chips" id="fuelBox"><label><input type="radio" name="fuel" value="無" checked>無</label><label><input type="radio" name="fuel" value="有">有</label></div></div>
 <label for="fuelAmount" id="fuelAmountL" hidden>燃料補給量（L）<input id="fuelAmount" inputmode="decimal"></label>
-<label for="note">備考<small>空欄でもよい</small><textarea id="note" rows="2"></textarea></label>
+<label for="note">備考<small>空欄でもよい</small><input id="note"></label>
 </section>
 
 <section>
 <h2>反映する</h2>
 <div class="miss" id="miss"></div>
-<a class="big" id="go" href="https://settsu-city.form.kintoneapp.com/public/0e09b7fc352f05f01d18e01e75eb1ea32db450a5c83bbb9faff2030bf91e61d6" target="_blank" rel="noopener">コピーしてフォームを開く</a>
-<p id="copyMsg" aria-live="polite"></p>
-<textarea class="code" id="dataBox" readonly hidden aria-label="反映する内容"></textarea>
+<a class="big" id="go" href="#" target="_blank" rel="noopener">運転日誌フォームに反映して開く</a>
 <ol>
-<li>上のボタンを押すと、内容がコピーされ、運転日誌フォームが開きます。</li>
-<li>開いたフォームで、ブックマークの「運転日誌反映」を押します。</li>
-<li>「貼り付けて反映」を押すと、全部の項目と前回の距離が入ります。</li>
+<li>上のボタンを押すと、本来の運転日誌フォームが、入れた内容の入った状態で開きます。</li>
 <li>内容を確かめて、フォームの送信ボタンを押します。</li>
 </ol>
-<button class="btn wide" type="button" id="clear">送信が終わったら：今回の分を消す（いつもの設定は残す）</button>
 </section>
-
-<details>
-<summary>最初の1回だけ：「運転日誌反映」ブックマークを作る</summary>
-<div>
-<p class="note">全員同じブックマークです。Safari または Chrome で、このページを開いて行ってください（Claude のアプリの中では、ブックマークが使えません）。</p>
-<button class="big" type="button" id="bmCopy">ブックマークの中身をコピー</button>
-<p class="note" id="bmMsg" aria-live="polite"></p>
-<textarea class="code" id="bmBox" readonly hidden aria-label="ブックマークに貼る文字列"></textarea>
-<div class="lbl">Safari</div>
-<ol><li>運転日誌フォームを開き、共有ボタン（□に↑）→「ブックマークを追加」。名前を「運転日誌反映」にして保存。</li>
-<li>本のマーク →「編集」→「運転日誌反映」をタップ。URL欄の文字を全部消し、コピーした中身を貼り付けて「完了」。</li>
-<li>使うときは、フォームで本のマーク →「運転日誌反映」。</li></ol>
-<div class="lbl">Chrome</div>
-<ol><li>運転日誌フォームを開き、︙ →「☆」で追加 → すぐ出る「編集」を押す。</li>
-<li>名前を「運転日誌反映」に変え、URL欄を全部消してコピーした中身を貼り付けて保存。</li>
-<li>使うときは、フォームのアドレス欄に「運転日誌反映」と打ち、☆付きの候補をタップ。</li></ol>
-<p class="note">以前の「運転日誌入力」ブックマークは使わなくなります。消してかまいません。</p>
-</div>
-</details>
 
 <section class="warn">
 <h2>大事なこと</h2>
@@ -130,7 +112,11 @@ textarea.code{height:64px;font-size:11px;color:var(--sub)}
 </main>
 <script>
 var STAFF = [{"name": "石田　亮太", "kana": "いしだ"}, {"name": "上中　陽介", "kana": "うえなか"}, {"name": "馬田　健太", "kana": "うまた"}, {"name": "大﨑　貴子", "kana": "おおさき"}, {"name": "澤田　真也", "kana": "さわだ"}, {"name": "島田　恵里", "kana": "しまだ"}, {"name": "鈴木　友二", "kana": "すずき"}, {"name": "田中　大介", "kana": "たなか"}, {"name": "筒井　豊", "kana": "つつい"}, {"name": "長曽　寛央", "kana": "ながそ"}, {"name": "橋本　知", "kana": "はしもと"}, {"name": "羽田　行伸", "kana": "はねだ"}, {"name": "樋口　三花", "kana": "ひぐち"}, {"name": "宮本　藍", "kana": "みやもと"}, {"name": "宗木　俊憲", "kana": "むねき"}];
-var HANEI = "(async function () {\nvar BEFORE = 10, AFTER = 10;\nif (!document.querySelector('[data-field-code=\"car_number\"]')) { alert('運転日誌フォームを開いてから押してください。'); return; }\nif (window.__unten_busy) return;\nvar sleep = function (ms) { return new Promise(function (r) { setTimeout(r, ms); }); };\nvar F = function (code) { return document.querySelector('[data-field-code=\"' + code + '\"]'); };\nvar setVal = function (inp, v) {\nvar proto = inp.tagName === 'TEXTAREA' ? HTMLTextAreaElement.prototype : HTMLInputElement.prototype;\nObject.getOwnPropertyDescriptor(proto, 'value').set.call(inp, v);\ninp.dispatchEvent(new Event('input', { bubbles: true }));\ninp.dispatchEvent(new Event('change', { bubbles: true }));\n};\nvar val = function (code) { var e = F(code); return e ? (e.querySelector('input,textarea') || {}).value || '' : ''; };\nvar put = function (code, v) { var e = F(code); if (e && v !== undefined && v !== null && v !== '') setVal(e.querySelector('input,textarea'), String(v)); };\nvar norm = function (s) { return (s || '').replace(/[\\s　]/g, ''); };\nvar dtInput = function (code) { var e = F(code); return e ? e.querySelector('input[type=\"datetime-local\"]') : null; };\nvar z = function (x) { return ('0' + x).slice(-2); };\nvar fmt = function (d) { return d.getFullYear() + '-' + z(d.getMonth() + 1) + '-' + z(d.getDate()) + 'T' + z(d.getHours()) + ':' + z(d.getMinutes()); };\nvar parse = function (s) { var m = (s || '').match(/(\\d{4})-(\\d{2})-(\\d{2})[T ](\\d{2}):(\\d{2})/); return m ? new Date(+m[1], m[2] - 1, +m[3], +m[4], +m[5]) : null; };\nvar shift = function (s, min) { var d = parse(s); return d ? fmt(new Date(d.getTime() + min * 60000)) : ''; };\nvar D = await new Promise(function (resolve) {\nvar old = document.getElementById('unten-panel'); if (old) old.remove();\nvar p = document.createElement('div');\np.id = 'unten-panel';\np.style.cssText = 'position:fixed;inset:0;z-index:2147483647;background:rgba(0,0,0,.45);display:flex;align-items:flex-start;justify-content:center;padding:16px;box-sizing:border-box;font-family:\"Hiragino Sans\",\"Yu Gothic UI\",\"Meiryo\",sans-serif';\np.innerHTML = '<div style=\"background:#fff;color:#1d2422;border-radius:10px;max-width:440px;width:100%;padding:16px 18px;box-sizing:border-box\">' +\n'<div style=\"font-size:18px;font-weight:bold;color:#1f7a5c\">別フォームの内容を反映<\/div>' +\n'<div style=\"font-size:14px;margin-top:4px\">別フォームで「コピーしてフォームを開く」を押したあと、下のボタンを押してください。<\/div>' +\n'<button id=\"u-paste\" type=\"button\" style=\"display:block;width:100%;margin-top:12px;font-size:17px;font-weight:bold;padding:13px;border:0;border-radius:8px;background:#1f7a5c;color:#fff\">貼り付けて反映<\/button>' +\n'<div style=\"font-size:13px;color:#5b6663;margin-top:12px\">ボタンで入らないときは、下の枠を長押しして「ペースト」してください。<\/div>' +\n'<textarea id=\"u-box\" style=\"width:100%;box-sizing:border-box;height:56px;font-size:16px;margin-top:4px;border:1px solid #9aa7a3;border-radius:6px\"><\/textarea>' +\n'<div id=\"u-err\" style=\"color:#b3261e;font-size:14px;margin-top:6px\"><\/div>' +\n'<button id=\"u-no\" type=\"button\" style=\"display:block;width:100%;margin-top:8px;font-size:15px;padding:10px;border:1px solid #9aa7a3;border-radius:8px;background:#fff;color:#1d2422\">閉じる<\/button><\/div>';\ndocument.body.appendChild(p);\nvar err = document.getElementById('u-err');\nvar take = function (t) {\nvar m = (t || '').match(/UNTEN1:(\\{[\\s\\S]*\\})/);\nif (!m) { err.textContent = '別フォームの内容が見つかりません。別フォームで「コピーしてフォームを開く」を押してから、もう一度試してください。'; return; }\ntry { var d = JSON.parse(m[1]); p.remove(); resolve(d); } catch (e) { err.textContent = '内容が途中で切れています。別フォームでもう一度コピーしてください。'; }\n};\ndocument.getElementById('u-paste').onclick = function () {\nif (!navigator.clipboard || !navigator.clipboard.readText) { err.textContent = '自動で貼り付けできません。下の枠に貼り付けてください。'; return; }\nnavigator.clipboard.readText().then(take, function () { err.textContent = '自動で貼り付けできませんでした。下の枠を長押しして「ペースト」してください。'; });\n};\nvar box = document.getElementById('u-box');\nbox.addEventListener('paste', function (e) { var t = (e.clipboardData || window.clipboardData).getData('text'); e.preventDefault(); take(t); });\nbox.addEventListener('input', function () { if (/UNTEN1:/.test(box.value)) take(box.value); });\ndocument.getElementById('u-no').onclick = function () { p.remove(); resolve(null); };\n});\nif (!D) return;\nwindow.__unten_busy = true;\nvar msg = [];\nasync function lookup(code, q, target, pick) {\nvar f = F(code); if (!f) { msg.push('項目が見つからない: ' + code); return false; }\nvar before = val(target);\nsetVal(f.querySelector('input'), q);\nf.querySelector('button').click();\nfor (var i = 0; i < 40; i++) {\nawait sleep(250);\nvar t = document.querySelector('table tbody');\nif (t) {\nvar rows = [];\nfor (var k = 0; k < 16; k++) {\nawait sleep(250);\nrows = Array.prototype.slice.call(document.querySelectorAll('table tbody tr')).filter(function (tr) { return tr.cells.length > 1; });\nif (rows.some(function (tr) { return norm(tr.innerText).indexOf(norm(q)) >= 0; })) break;\n}\nrows = rows.filter(function (tr) { return norm(tr.innerText).indexOf(norm(q)) >= 0; });\nvar row = pick(rows);\nif (row) { row.click(); await sleep(800); return true; }\nreturn 'open';\n}\nif (val(target) && val(target) !== before) return true;\n}\nreturn false;\n}\nvar cellsText = function (tr) { return Array.prototype.map.call(tr.cells, function (c) { return norm(c.innerText); }); };\nvar byName = function (name) {\nreturn function (rows) {\nvar hit = rows.filter(function (tr) { return name && cellsText(tr).indexOf(norm(name)) >= 0; });\nreturn hit.length === 1 ? hit[0] : (rows.length === 1 ? rows[0] : null);\n};\n};\nasync function person(search, target, p, label) {\nif (!p || !p.kana) return;\nif (norm(val(target)) === norm(p.name)) return;\nvar r = await lookup(search, p.kana, target, byName(p.name));\nif (r === 'open') { msg.push(label + '：一覧から選んでください（開いたままにしています）。'); throw 'stop'; }\nif (r !== true) msg.push(label + '：見つかりませんでした。');\n}\nfunction choose(code, values) {\nvar e = F(code); if (!e || !values) return;\nvar want = [].concat(values);\nArray.prototype.forEach.call(e.querySelectorAll('input[type=radio],input[type=checkbox]'), function (i) {\nvar v = i.value === 'on' || !i.value ? ((i.closest('label') || {}).innerText || '').trim() : i.value;\nvar on = want.indexOf(v) >= 0;\nif (i.type === 'radio') { if (on && !i.checked) i.click(); }\nelse if (on !== i.checked) i.click();\n});\n}\ntry {\nif (D.car && norm(val('car_number')).slice(-4) !== norm(D.car).slice(-4)) {\nvar key = D.car.replace(/.*?(\\d{1,4})$/, '$1');\nvar r1 = await lookup('car_search', key, 'car_number', function (rows) {\nvar hit = rows.filter(function (tr) { return cellsText(tr).some(function (c) { return c === norm(D.car) || new RegExp('[^\\\\d]' + key + '$').test(c); }); });\nreturn hit.length === 1 ? hit[0] : (rows.length === 1 ? rows[0] : null);\n});\nif (r1 === 'open') { msg.push('車両：一覧から選んでください（開いたままにしています）。'); throw 'stop'; }\n}\nvar car = val('car_number');\nif (!car) msg.push('車両番号が入っていません。');\nif (car && !val('odometer_before')) {\nvar r2 = await lookup('previous_odometer_lookup', car.replace(/.*?(\\d{1,4})$/, '$1'), 'odometer_before', function (rows) {\nvar best = null, bestKm = -1;\nrows.forEach(function (tr) {\nvar c = cellsText(tr); if (c[0] !== norm(car)) return;\nvar km = parseFloat((c[1] || '').replace(/,/g, ''));\nif (!isNaN(km) && km > bestKm) { bestKm = km; best = tr; }\n});\nreturn best;\n});\nif (r2 !== true) msg.push('出庫前距離：前回の記録が見つかりませんでした。一覧から選ぶか、管理者に確認してください。');\n}\nawait person('driver_search', 'driver_name', D.drv, '運転者');\nawait person('kviewer_lookup_1', 'alcohol_checker', D.chk1, '酒気帯び確認者（運転前）');\nawait person('kviewer_lookup', 'single_line_text_1', D.chk2, '酒気帯び確認者（運転後）');\nchoose('fuel_status', D.fuel ? '有' : '無');\nif (D.fuel) {\nawait sleep(500);\nawait person('fuel_search', 'fuel_person', D.drv, '燃料補給者');\nput('fuel_amount', D.fuelAmount);\n}\n} catch (e) { if (e !== 'stop') msg.push('途中で止まりました：' + e); }\nwindow.__unten_busy = false;\nput('driving_section', D.start);\nput('driving_section_0', D.dest);\nput('single_line_text', D.purpose);\nput('文字列__1行_', D.weather);\nput('odometer_after', D.odoAfter);\nput('purpose_free', D.note);\nif (D.dep && dtInput('departureTime')) { setVal(dtInput('departureTime'), D.dep); setVal(dtInput('alcoholCheckBefore'), shift(D.dep, -BEFORE)); }\nif (D.arr && dtInput('arrivalTime')) { setVal(dtInput('arrivalTime'), D.arr); setVal(dtInput('alcoholCheckAfter'), shift(D.arr, AFTER)); }\nif (D.alc1 && D.alc1.length) choose('alcohol_check', D.alc1);\nif (D.alc2 && D.alc2.length) choose('alcohol_check_0', D.alc2);\nObject.keys(D.insp || {}).forEach(function (k) { choose(k, D.insp[k]); });\nif (!window.__unten_watch) {\nvar last = { d: (dtInput('departureTime') || {}).value || '', a: (dtInput('arrivalTime') || {}).value || '' };\nwindow.__unten_watch = setInterval(function () {\nvar d = dtInput('departureTime'), a = dtInput('arrivalTime'), cb = dtInput('alcoholCheckBefore'), ca = dtInput('alcoholCheckAfter');\nif (d && cb && d.value !== last.d) { last.d = d.value; if (d.value) setVal(cb, shift(d.value, -BEFORE)); }\nif (a && ca && a.value !== last.a) { last.a = a.value; if (a.value) setVal(ca, shift(a.value, AFTER)); }\n}, 700);\n}\nawait sleep(800);\nvar ob = parseFloat(val('odometer_before').replace(/,/g, '')), oa = parseFloat(val('odometer_after').replace(/,/g, ''));\nif (!isNaN(ob) && !isNaN(oa) && oa < ob) msg.push('入庫後距離（' + oa + 'km）が出庫前距離（' + ob + 'km）より小さくなっています。');\nvar left = [];\nArray.prototype.forEach.call(document.querySelectorAll('[data-field-code]'), function (e) {\nif (!e.querySelector('.fb-custom--field-label--required-sign') || e.offsetParent === null) return;\nvar filled = false;\nArray.prototype.forEach.call(e.querySelectorAll('input,textarea'), function (i) {\nif (i.type === 'radio' || i.type === 'checkbox') { if (i.checked) filled = true; }\nelse if (i.value) filled = true;\n});\ne.style.outline = filled ? '' : '3px solid #e0a24a';\nif (!filled) left.push(e);\n});\nif (left[0]) left[0].scrollIntoView({ block: 'center' });\nvar names = left.map(function (e) { var l = e.querySelector('label'); return l ? l.innerText.trim() : ''; }).filter(Boolean);\nalert('反映しました。' +\n(val('odometer_before') ? '\\n出庫前距離（前回の記録）：' + val('odometer_before') + 'km' : '') +\n(msg.length ? '\\n\\n【確認してください】\\n・' + msg.join('\\n・') : '') +\n(names.length ? '\\n\\n【まだ入っていない必須項目：' + names.length + '件（オレンジの枠）】\\n・' + names.slice(0, 12).join('\\n・') : '') +\n'\\n\\n内容を確かめてから、送信ボタンを押してください。');\n})();";
+var FORM = 'https://settsu-city.form.kintoneapp.com/public/0e09b7fc352f05f01d18e01e75eb1ea32db450a5c83bbb9faff2030bf91e61d6';
+var VIEW = 'https://settsu-city.viewer.kintoneapp.com/public/api/records/';
+var CARS = VIEW + 'a5da43d5b7314eae29584e49ffb1f6055d73db91ec71963361bca50d851422a8/';  /* 車両の一覧 */
+var LOGS = VIEW + 'fd6098ce5d4095060bc06890bd08c38d71e8554077a050f1ac52c84e35ab0525/';  /* これまでの運転日誌 */
+var DEPT = '学校教育課';
 var BEFORE = 10, AFTER = 10;
 var ALC = ['無（検知器使用）','無（目視確認）','無（その他－電話）','無（その他－電話以外）','有'];
 var INSP = [
@@ -160,6 +146,10 @@ var fmt=function(d){return d.getFullYear()+'-'+z(d.getMonth()+1)+'-'+z(d.getDate
 var parse=function(s){var m=(s||'').match(/(\d{4})-(\d{2})-(\d{2})T(\d{2}):(\d{2})/);return m?new Date(+m[1],m[2]-1,+m[3],+m[4],+m[5]):null;};
 var shift=function(s,min){var d=parse(s);return d?fmt(new Date(d.getTime()+min*60000)):'';};
 var show=function(v){var d=parse(v);return d?(d.getMonth()+1)+'/'+d.getDate()+' '+z(d.getHours())+':'+z(d.getMinutes()):'';};
+/* 本来のフォームは、URLで渡した日時を世界標準時として読む。日本時間から9時間（端末の時差）戻して渡す */
+var utc=function(s){var d=parse(s);return d?d.toISOString().slice(0,16):'';};
+var num=function(s){return String(s||'').replace(/[０-９]/g,function(c){return String.fromCharCode(c.charCodeAt(0)-0xFEE0);}).replace(/[^\d.]/g,'');};
+var norm=function(s){return String(s||'').replace(/[\s　]/g,'');};
 
 /* 選択肢を作る */
 ['drv','chk1','chk2'].forEach(function(id){STAFF.forEach(function(p,i){var o=document.createElement('option');o.value=i;o.textContent=p.name.replace(/[\s　]+/,' ')+'（'+p.kana+'）';$(id).appendChild(o);});});
@@ -167,87 +157,112 @@ var show=function(v){var d=parse(v);return d?(d.getMonth()+1)+'/'+d.getDate()+' 
 $('insp').innerHTML=INSP.map(function(it,n){return '<div class="item" data-code="'+esc(it[0])+'"><div class="name">'+esc(it[1])+'</div><div class="chips">'+
   it[2].map(function(v){return '<label><input type="radio" name="i'+n+'" value="'+esc(v)+'">'+esc(v)+'</label>';}).join('')+'</div></div>';}).join('');
 
-/* 保存と復元 */
-var KEEP=['carSel','carOther','drv','chk1','chk2','start'];
-var TRIP=['dep','arr','purpose','dest','weather','odoAfter','fuelAmount','note'];
+/* いつもの設定だけ保存する（今回の内容は保存しない） */
+var KEEP=['drv','chk1','chk2','start'];
+function saveSet(){try{var s={};KEEP.forEach(function(k){s[k]=$(k).value;});localStorage.setItem('unten-set',JSON.stringify(s));}catch(e){}}
+var saved={};try{saved=JSON.parse(localStorage.getItem('unten-set')||'{}');KEEP.forEach(function(k){if(saved[k]!==undefined)$(k).value=saved[k];});}catch(e){}
+try{localStorage.removeItem('unten-form');}catch(e){}
+$('setBox').open=!(saved.drv&&saved.chk1&&saved.chk2);
+KEEP.forEach(function(k){$(k).addEventListener('change',saveSet);});
+
+/* 車両：一覧から車両番号と車両名を探し、前回の入庫後距離を読む */
+var CAR=null, carSeq=0;
+async function getAll(base,filter){
+  var out=[];
+  for(var p=1;p<=30;p++){
+    var q=filter?'?'+new URLSearchParams({'additionalFilters[0][field]':'car_number','additionalFilters[0][sign]':'like','additionalFilters[0][value]':filter}):'';
+    var j=await fetch(base+p+q).then(function(r){if(!r.ok)throw r.status;return r.json();});
+    var rs=j.records||[];out=out.concat(rs);
+    if(!rs.length||out.length>=(j.totalCount||0))break;
+  }
+  return out;
+}
+async function pickCar(){
+  var key=$('carSel').value==='other'?norm($('carOther').value):$('carSel').value;
+  var my=++carSeq;CAR=null;
+  if(!key){$('carInfo').textContent='';refresh();return;}
+  var digits=(key.match(/(\d{1,4})$/)||[])[1]||key;
+  $('carInfo').style.color='';$('carInfo').textContent='車両と前回の記録を調べています…';
+  try{
+    var cars=(await getAll(CARS,digits)).map(function(r){return {num:r.car_number.value,name:r.car_name.value};});
+    var hit=cars.filter(function(c){return norm(c.num)===key||new RegExp('[^\\d]'+digits+'$').test(norm(c.num));});
+    if(my!==carSeq)return;
+    if(hit.length!==1){$('carInfo').style.color='var(--bad)';$('carInfo').textContent=hit.length?'当てはまる車両が'+hit.length+'台あります。車両番号を全部入れてください。':'車両が見つかりませんでした。番号を確かめてください。';refresh();return;}
+    CAR=hit[0];
+    var logs=await getAll(LOGS,digits);
+    if(my!==carSeq)return;
+    var best=-1,when='';
+    logs.forEach(function(r){if(norm(r.car_number.value)!==norm(CAR.num))return;var km=parseFloat(num(r.odometer_after.value));if(!isNaN(km)&&km>best){best=km;when=r.arrivalTime&&r.arrivalTime.value||'';}});
+    if(best>=0)$('odoBefore').value=String(best);
+    $('carInfo').textContent=CAR.name+'　'+CAR.num+(best>=0?'　前回の記録：'+best.toLocaleString()+'km'+(when?'（'+show(fmt(new Date(when)))+' 入庫）':''):'　前回の記録が見つかりませんでした');
+  }catch(e){
+    if(my!==carSeq)return;
+    $('carInfo').style.color='var(--bad)';$('carInfo').textContent='車両の記録を読めませんでした。電波のよい所で、車両を選び直してください。';
+  }
+  refresh();
+}
+$('carSel').addEventListener('change',function(){$('carOtherL').hidden=$('carSel').value!=='other';$('odoBefore').value='';if($('carSel').value!=='other')pickCar();else{CAR=null;$('carInfo').textContent='';refresh();}});
+$('carFind').addEventListener('click',function(){$('odoBefore').value='';pickCar();});
+$('carOther').addEventListener('keydown',function(e){if(e.key==='Enter'){e.preventDefault();$('odoBefore').value='';pickCar();}});
+
 function state(){
-  var s={};KEEP.concat(TRIP).forEach(function(k){s[k]=$(k).value;});
+  var s={};['dep','arr','purpose','dest','weather','odoBefore','odoAfter','fuelAmount','note'].concat(KEEP).forEach(function(k){s[k]=$(k).value.trim();});
   s.alc1=[].map.call(document.querySelectorAll('input[name=alc1]:checked'),function(i){return i.value;});
   s.alc2=[].map.call(document.querySelectorAll('input[name=alc2]:checked'),function(i){return i.value;});
   s.fuel=(document.querySelector('input[name=fuel]:checked')||{}).value==='有';
   s.insp={};INSP.forEach(function(it,n){var c=document.querySelector('input[name=i'+n+']:checked');if(c)s.insp[it[0]]=c.value;});
   return s;
 }
-function save(){try{localStorage.setItem('unten-form',JSON.stringify(state()));}catch(e){}}
-function restore(){
-  var s={};try{s=JSON.parse(localStorage.getItem('unten-form')||'{}');}catch(e){}
-  KEEP.concat(TRIP).forEach(function(k){if(s[k]!==undefined&&s[k]!==null)$(k).value=s[k];});
-  (s.alc1||[]).forEach(function(v){var i=document.querySelector('input[name=alc1][value="'+CSS.escape(v)+'"]');if(i)i.checked=true;});
-  (s.alc2||[]).forEach(function(v){var i=document.querySelector('input[name=alc2][value="'+CSS.escape(v)+'"]');if(i)i.checked=true;});
-  if(s.fuel)document.querySelector('input[name=fuel][value="有"]').checked=true;
-  INSP.forEach(function(it,n){var v=(s.insp||{})[it[0]];if(v){var i=document.querySelector('input[name=i'+n+'][value="'+CSS.escape(v)+'"]');if(i)i.checked=true;}});
-  return s;
-}
-var saved=restore();
-$('setBox').open=!(saved.drv&&saved.chk1&&saved.chk2);
-
-/* 画面の動き */
-function refresh(){
-  var o=$('carSel').value==='other';$('carOtherL').hidden=!o;
-  $('fuelAmountL').hidden=!(document.querySelector('input[name=fuel]:checked').value==='有');
-  $('calc1').textContent=$('dep').value?'→ 出庫前飲酒チェック日時：'+show(shift($('dep').value,-BEFORE))+'（'+BEFORE+'分前）':'';
-  var bad=$('dep').value&&$('arr').value&&parse($('arr').value)<=parse($('dep').value);
-  $('calc2').textContent=bad?'入庫日時が出庫日時より前になっています。':($('arr').value?'→ 入庫後飲酒チェック日時：'+show(shift($('arr').value,AFTER))+'（'+AFTER+'分後）':'');
-  $('calc2').style.color=bad?'var(--bad)':'';
-  [].forEach.call(document.querySelectorAll('#insp .item'),function(el){var c=el.querySelector('input:checked');el.classList.toggle('bad',!!c&&/あり/.test(c.value));});
-  $('miss').textContent=missing().length?'まだ入っていない項目：'+missing().join('、'):'';
-}
-function missing(){
-  var s=state(),m=[];
-  if(s.carSel==='other'&&!s.carOther.trim())m.push('その他車両の車両番号');
+function missing(s){
+  var m=[];
+  if(!CAR)m.push('車両');if(!s.odoBefore)m.push('出庫前距離');
   if(s.drv==='')m.push('運転者');if(s.chk1==='')m.push('確認者（運転前）');if(s.chk2==='')m.push('確認者（運転後）');
-  if(!s.dep)m.push('出庫日時');if(!s.purpose.trim())m.push('用件');if(!s.dest.trim())m.push('目的地');
+  if(!s.dep)m.push('出庫日時');if(!s.purpose)m.push('用件');if(!s.dest)m.push('目的地');
   if(!s.alc1.length)m.push('酒気帯び（運転前）');
   var ni=INSP.filter(function(it){return !s.insp[it[0]];}).length;if(ni)m.push('日常点検 '+ni+'項目');
-  if(!s.arr)m.push('入庫日時');if(!s.odoAfter.trim())m.push('入庫後距離');if(!s.alc2.length)m.push('酒気帯び（運転後）');
-  if(s.fuel&&!s.fuelAmount.trim())m.push('燃料補給量');
+  if(!s.arr)m.push('入庫日時');if(!s.odoAfter)m.push('入庫後距離');if(!s.alc2.length)m.push('酒気帯び（運転後）');
+  if(s.fuel&&!s.fuelAmount)m.push('燃料補給量');
   return m;
 }
-document.addEventListener('input',function(){save();refresh();});
-document.addEventListener('change',function(){save();refresh();});
-[].forEach.call(document.querySelectorAll('[data-now]'),function(b){b.addEventListener('click',function(){$(b.dataset.now).value=fmt(new Date());save();refresh();});});
-$('allOk').addEventListener('click',function(){INSP.forEach(function(it,n){if(document.querySelector('input[name=i'+n+']:checked'))return;var i=document.querySelector('input[name=i'+n+'][value="'+it[2][0]+'"]');if(i)i.checked=true;});save();refresh();});
-$('clear').addEventListener('click',function(){
-  if($('clear').dataset.sure!=='1'){$('clear').dataset.sure='1';$('clear').textContent='もう一度押すと消します（いつもの設定は残ります）';return;}
-  TRIP.forEach(function(k){$(k).value='';});$('weather').value='晴';
-  [].forEach.call(document.querySelectorAll('input[name=alc1],input[name=alc2],#insp input'),function(i){i.checked=false;});
-  document.querySelector('input[name=fuel][value="無"]').checked=true;
-  $('clear').dataset.sure='';$('clear').textContent='送信が終わったら：今回の分を消す（いつもの設定は残す）';
-  $('copyMsg').textContent='今回の分を消しました。';save();refresh();window.scrollTo(0,0);
-});
-
-/* 反映用のデータを作ってコピー → フォームを開く（リンクはそのまま開く） */
-function payload(){
-  var s=state(),pick=function(v){return v===''?null:STAFF[+v];};
-  var D={car:s.carSel==='other'?s.carOther.trim():s.carSel,drv:pick(s.drv),chk1:pick(s.chk1),chk2:pick(s.chk2),start:s.start.trim(),
-    dep:s.dep,arr:s.arr,purpose:s.purpose.trim(),dest:s.dest.trim(),weather:s.weather,
-    odoAfter:s.odoAfter.replace(/[^\d.]/g,''),alc1:s.alc1,alc2:s.alc2,insp:s.insp,fuel:s.fuel,fuelAmount:s.fuel?s.fuelAmount.trim():'',note:s.note.trim()};
-  return 'UNTEN1:'+JSON.stringify(D);
+/* 本来のフォームを開くURL（項目コード=値）。入れていない項目は付けない */
+function formUrl(s){
+  var P=new URLSearchParams(),add=function(k,v){if(v!==undefined&&v!==null&&String(v)!=='')P.append(k,v);};
+  var pick=function(v){return v===''?null:STAFF[+v];};
+  var d=pick(s.drv),c1=pick(s.chk1),c2=pick(s.chk2);
+  if(CAR){add('car_number',CAR.num);add('car_name',CAR.name);}
+  add('odometer_before',num(s.odoBefore));add('odometer_after',num(s.odoAfter));
+  if(d){add('driver_name',d.name);add('department',DEPT);}
+  if(c1)add('alcohol_checker',c1.name);if(c2)add('single_line_text_1',c2.name);
+  add('driving_section',s.start);add('driving_section_0',s.dest);add('single_line_text',s.purpose);add('文字列__1行_',s.weather);add('purpose_free',s.note.replace(/\s*\n\s*/g,' '));
+  if(s.dep){add('departureTime',utc(s.dep));add('alcoholCheckBefore',utc(shift(s.dep,-BEFORE)));}
+  if(s.arr){add('arrivalTime',utc(s.arr));add('alcoholCheckAfter',utc(shift(s.arr,AFTER)));}
+  if(s.alc1.length)add('alcohol_check',s.alc1.join(','));
+  if(s.alc2.length)add('alcohol_check_0',s.alc2.join(','));
+  Object.keys(s.insp).forEach(function(k){add(k,s.insp[k]);});
+  add('fuel_status',s.fuel?'有':'無');
+  if(s.fuel){add('fuel_amount',num(s.fuelAmount));if(d)add('fuel_person',d.name);}
+  return FORM+'?'+P.toString();
 }
-$('go').addEventListener('click',function(){
-  var t=payload(),box=$('dataBox');box.value=t;
-  var fail=function(){box.hidden=false;box.focus();box.select();$('copyMsg').textContent='自動でコピーできませんでした。下の枠の文字を全部選んでコピーしてから、フォームで反映してください。';};
-  try{
-    if(navigator.clipboard&&navigator.clipboard.writeText){navigator.clipboard.writeText(t).then(function(){box.hidden=true;$('copyMsg').textContent='コピーしました。開いたフォームで「運転日誌反映」を押してください。';},fail);}
-    else fail();
-  }catch(e){fail();}
-});
-$('bmCopy').addEventListener('click',function(){
-  var t='javascript:'+HANEI.replace(/%/g,'%25').replace(/#/g,'%23').replace(/\n/g,'%0A'),box=$('bmBox');box.value=t;
-  var fail=function(){box.hidden=false;box.focus();box.select();$('bmMsg').textContent='自動でコピーできませんでした。下の枠の文字を全部選んでコピーしてください。';};
-  try{if(navigator.clipboard&&navigator.clipboard.writeText){navigator.clipboard.writeText(t).then(function(){box.hidden=true;$('bmMsg').textContent='コピーしました。下の手順でブックマークに貼り付けてください。';},fail);}else fail();}catch(e){fail();}
-});
-
+function refresh(){
+  var s=state();
+  $('fuelAmountL').hidden=!s.fuel;
+  $('calc1').textContent=s.dep?'→ 出庫前飲酒チェック日時：'+show(shift(s.dep,-BEFORE))+'（'+BEFORE+'分前）':'';
+  var bad=s.dep&&s.arr&&parse(s.arr)<=parse(s.dep);
+  $('calc2').textContent=bad?'入庫日時が出庫日時より前になっています。':(s.arr?'→ 入庫後飲酒チェック日時：'+show(shift(s.arr,AFTER))+'（'+AFTER+'分後）':'');
+  $('calc2').style.color=bad?'var(--bad)':'';
+  var ob=parseFloat(num(s.odoBefore)),oa=parseFloat(num(s.odoAfter));
+  $('calc3').textContent=!isNaN(ob)&&!isNaN(oa)?(oa<ob?'入庫後距離が出庫前距離より小さくなっています。':'→ 走行距離：'+(Math.round((oa-ob)*10)/10).toLocaleString()+'km'):'';
+  $('calc3').style.color=!isNaN(ob)&&!isNaN(oa)&&oa<ob?'var(--bad)':'';
+  [].forEach.call(document.querySelectorAll('#insp .item'),function(el){var c=el.querySelector('input:checked');el.classList.toggle('bad',!!c&&/あり/.test(c.value));});
+  var m=missing(s);
+  $('miss').textContent=m.length?'まだ入っていない項目：'+m.join('、')+'（入れていない項目は、フォームで入れられます）':'';
+  $('go').href=formUrl(s);
+}
+document.addEventListener('input',refresh);
+document.addEventListener('change',refresh);
+[].forEach.call(document.querySelectorAll('[data-now]'),function(b){b.addEventListener('click',function(){$(b.dataset.now).value=fmt(new Date());refresh();});});
+$('allOk').addEventListener('click',function(){INSP.forEach(function(it,n){if(document.querySelector('input[name=i'+n+']:checked'))return;var i=document.querySelector('input[name=i'+n+'][value="'+it[2][0]+'"]');if(i)i.checked=true;});refresh();});
+$('go').addEventListener('click',function(){$('go').href=formUrl(state());});
 refresh();
 </script>
 </body></html>
